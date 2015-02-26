@@ -43,6 +43,18 @@ class WCSimDetectorMessenger: public G4UImessenger
   G4UIcmdWithAString* distortionCmd;
   G4UIcmdWithoutParameter* WCConstruct;
 
+  //nuPRISM commands
+  G4UIcmdWithoutParameter* UpdateNuPrism;
+  G4UIcmdWithAString* SetPMTType;
+  G4UIcmdWithAString* SetPMTCoverage;
+  G4UIcmdWithADoubleAndUnit* SetDetectorHeight;
+  G4UIcmdWithADoubleAndUnit* SetDetectorOffset;
+  G4UIcmdWithADoubleAndUnit* SetDetectorDiameter;
+  G4UIcmdWithADoubleAndUnit* SetShaftHeight;
+  G4UIcmdWithADoubleAndUnit* SetShaftDiameter;
+
+
+
 };
 
 #endif
