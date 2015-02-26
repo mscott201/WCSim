@@ -28,6 +28,7 @@ WCSimDetectorConstruction::WCSimDetectorConstruction(G4int DetConfig,WCSimTuning
   // Decide if (only for the case of !1kT detector) should be upright or horizontal
   isUpright = false;
   isHyperK  = false;
+  isNuPrism  = false;
 
   debugMode = false;
 //-----------------------------------------------------
@@ -86,8 +87,8 @@ WCSimDetectorConstruction::WCSimDetectorConstruction(G4int DetConfig,WCSimTuning
   //----------------------------------------------------- 
   // Make the detector messenger to allow changing geometry
   //-----------------------------------------------------
-
   messenger = new WCSimDetectorMessenger(this);
+
 }
 
 #include "G4GeometryManager.hh"
@@ -137,6 +138,7 @@ G4VPhysicalVolume* WCSimDetectorConstruction::Construct()
   G4LogicalVolume* logicWCBox;
   // Select between HyperK and cylinder
   if (isHyperK) logicWCBox = ConstructHyperK();
+  else if (isNuPrism) logicWCBox = ConstructNuPrism();
   else logicWCBox = ConstructCylinder(); 
 
   G4cout << " WCLength       = " << WCLength/m << " m"<< G4endl;
@@ -171,6 +173,7 @@ G4VPhysicalVolume* WCSimDetectorConstruction::Construct()
   // Create and place the physical Volumes
   //-----------------------------------------------------
 
+
   // Experimental Hall
   G4VPhysicalVolume* physiExpHall = 
     new G4PVPlacement(0,G4ThreeVector(),
@@ -181,13 +184,19 @@ G4VPhysicalVolume* WCSimDetectorConstruction::Construct()
   // Water Cherenkov Detector (WC) mother volume
   // WC Box, nice to turn on for x and y views to provide a frame:
 
-	  //G4RotationMatrix* rotationMatrix = new G4RotationMatrix;
-	  //rotationMatrix->rotateX(90.*deg);
-	  //rotationMatrix->rotateZ(90.*deg);
+  // Create a default rotation matrix with no rotation
+  // If we are processing nuPRISM files, rotate detector to align with
+  // T2K beam coordinate system
+  G4RotationMatrix* rotationMatrix = new G4RotationMatrix();
+  if(isNuPrism){
+      rotationMatrix->rotateX(0.*deg);
+      rotationMatrix->rotateY(0.*deg);
+      rotationMatrix->rotateZ(0.*deg);
+  }
 
   G4ThreeVector genPosition = G4ThreeVector(0., 0., WCPosition);
   G4VPhysicalVolume* physiWCBox = 
-    new G4PVPlacement(0,
+    new G4PVPlacement(rotationMatrix,
 		      genPosition,
 		      logicWCBox,
 		      "WCBox",
@@ -204,7 +213,7 @@ G4VPhysicalVolume* WCSimDetectorConstruction::Construct()
   
   //  TraverseReplicas(physiWCBox, 0, G4Transform3D(), 
   //	   &WCSimDetectorConstruction::PrintGeometryTree) ;
-  
+ 
   TraverseReplicas(physiWCBox, 0, G4Transform3D(), 
 	           &WCSimDetectorConstruction::DescribeAndRegisterPMT) ;
   
