@@ -120,6 +120,38 @@ public:
 
 
   // *** End HyperK Geometry ***
+  // Start nuPRISM geometry options
+
+  // Methods to construct the nuPRISM detector
+  void SetNuPrismGeometry(G4String PMTType, G4double PMTCoverage, G4double shaftHeight, G4double shaftDiameter, G4double detectorHeight, G4double detectorOffset, G4double detectorDiameter);
+  void SetDefaultNuPrismGeometry();
+
+  void   SetIsNuPrism(G4bool choice) {isNuPrism = choice;}
+  G4bool GetIsNuPrism() {return isNuPrism;}
+
+  void   SetPMTType(G4String type) {WCPMTType = type;}
+  G4String GetPMTType() {return WCPMTType;}
+
+  void   SetPMTCoverage(G4double cover) {WCPMTCoverage = cover;}
+  G4double GetPMTCoverage() {return WCPMTCoverage;}
+
+  void   SetShaftHeight(G4double height) {WCShaftHeight = height;}
+  G4double GetShaftHeight() {return WCShaftHeight;}
+
+  void   SetShaftDiameter(G4double radius) {WCShaftDiameter = radius;}
+  G4double GetShaftDiameter() {return WCShaftDiameter;}
+
+  void   SetDetectorHeight(G4double height) {WCIDHeight = height;}
+  G4double GetDetectorHeight() {return WCIDHeight;}
+
+  void   SetDetectorOffset(G4double offset) {WCIDOffset = offset;}
+  G4double GetDetectorOffset() {return WCIDOffset;}
+
+  void   SetDetectorDiameter(G4double radius) {WCIDDiameter = radius;}
+  G4double GetDetectorDiameter() {return WCIDDiameter;}
+
+  // End nuPRISM geometry options
+
 
   std::vector<WCSimPmtInfo*>* Get_Pmts() {return &fpmts;}
 
@@ -282,6 +314,16 @@ private:
   // amb79: to universally make changes in structure and geometry
   bool isUpright;
 
+  // *** Begin NuPrism geometry ***
+  G4bool isNuPrism;
+  G4double WCShaftHeight;
+  G4double WCShaftDiameter;
+  G4double WCIDOffset;
+  G4String WCPMTType;
+  G4double WCPMTCoverage;
+  G4LogicalVolume* ConstructNuPrism();
+  // End nuPRISM geometry 
+   
   // *** Begin HyperK Geometry ***
 
     void MatchWCSimAndHyperK();
